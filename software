@@ -1,0 +1,75 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Employee {
+protected:
+    string name;
+    int empID;
+    double salary;
+public:
+    Employee(string n, int id, double sal) : name(n), empID(id), salary(sal) {}
+    virtual void displayDetails() {
+        cout << "Employee ID: " << empID << "\nName: " << name << "\nSalary: " << salary << "\n";
+    }
+    int getID() { return empID; }
+};
+
+class Manager : public Employee {
+private:
+    string department;
+    double bonus;
+public:
+    Manager(string n, int id, double sal, string dept, double bon) : Employee(n, id, sal), department(dept), bonus(bon) {}
+    void displayDetails() override {
+        Employee::displayDetails();
+        cout << "Department: " << department << "\nBonus: " << bonus << "\n";
+    }
+};
+
+class Engineer : public Employee {
+private:
+    string specialization;
+    string project;
+public:
+    Engineer(string n, int id, double sal, string spec, string proj) : Employee(n, id, sal), specialization(spec), project(proj) {}
+    void displayDetails() override {
+        Employee::displayDetails();
+        cout << "Specialization: " << specialization << "\nProject: " << project << "\n";
+    }
+};
+
+class EmployeeManagementSystem {
+private:
+    vector<Employee*> employees;
+public:
+    void addEmployee(Employee* emp) { employees.push_back(emp); }
+    void displayAll() {
+        for (auto emp : employees) {
+            emp->displayDetails();
+            cout << "-----------------------------\n";
+        }
+    }
+    void searchEmployee(int id) {
+        for (auto emp : employees) {
+            if (emp->getID() == id) {
+                emp->displayDetails();
+                return;
+            }
+        }
+        cout << "Employee not found!\n";
+    }
+};
+
+int main() {
+    EmployeeManagementSystem ems;
+    ems.addEmployee(new Manager("Alice", 101, 3000, "HR", 2000));
+    ems.addEmployee(new Engineer("Bob", 102, 70000, "Software", "Project X"));
+    
+    cout << "All Employees:\n";
+    ems.displayAll();
+    
+    cout << "Search Employee by ID (102):\n";
+    ems.searchEmployee(102);
+    return 0;
+}
